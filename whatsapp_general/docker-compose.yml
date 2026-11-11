@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Alterado o nome do serviço/container para corresponder ao "Host Interno" da Imagem 2
+  whatsapp_general_redis:
+    image: redis:7-alpine
+    container_name: whatsapp_general_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  whatsapp_general_github:
+    build: .
+    container_name: whatsapp_api
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      # Apontando para o Host Interno do Redis correto
+      - REDIS_URL=redis://whatsapp_general_redis:6379
+      - MASTER_SUPABASE_URL=${MASTER_SUPABASE_URL}
+      - MASTER_SUPABASE_SERVICE_KEY=${MASTER_SUPABASE_SERVICE_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_ACCESS_TOKEN=${SUPABASE_ACCESS_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    depends_on:
+      - whatsapp_general_redis
+    restart: always
+
+  worker:
+    build: .
+    container_name: whatsapp_worker
+    command: arq worker.WorkerSettings
+    environment:
+      # Apontando para o Host Interno do Redis correto
+      - REDIS_URL=redis://whatsapp_general_redis:6379
+      - MASTER_SUPABASE_URL=${MASTER_SUPABASE_URL}
+      - MASTER_SUPABASE_SERVICE_KEY=${MASTER_SUPABASE_SERVICE_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - SUPABASE_ACCESS_TOKEN=${SUPABASE_ACCESS_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    depends_on:
+      - whatsapp_general_redis
+    restart: always
+
+volumes:
+  redis_data:

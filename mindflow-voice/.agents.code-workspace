@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "../../.agents"
+		},
+		{
+			"path": "../../Auto-Aprendizado"
+		},
+		{
+			"path": "../../Gerador-d-Prompt"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../temp_call_form_front"
+		},
+		{
+			"path": "../../z-api-automation-demo"
+		}
+	]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "username": "admin",
+    "password": "$2a$10$rBzwjxzEOBGLzMiMNbaWa.xVjiVrpc3uEYv5KpNpoOmXOJ7xJ1xZC",
+    "name": "Admin"
+  },
+  {
+    "username": "pedro",
+    "password": "$2a$10$0.hxjrkqJgqYl2t8AogCHeca0JAhuT1NeeDz0H4.4oAbc5bpQwdj6",
+    "name": "Pedro Zimmermann"
+  },
+  {
+    "username": "ivan",
+    "password": "$2a$10$3AoyZQftm7dSXX/RGPRILOM040WjeUgYLV6H8ubAnQw3AJ7c1V6TC",
+    "name": "Ivan Batista"
+  },
+  {
+    "username": "haynile",
+    "password": "$2a$10$qaIyoZLb4o6v3/FWMOqqNuUFDVS29TjI01YeuuL9mxwNiJJkUkBo.",
+    "name": "Haynile Couto"
+  },
+  {
+    "username": "ryan",
+    "password": "$2a$10$ybEDfuHtYwrzkCBtkwayQuewDRrjd6OGo4jwcsEf2R1.K9DHPPwo6",
+    "name": "Ryan Ferrari"
+  },
+  {
+    "username": "mariah",
+    "password": "$2a$10$LSCK..tvAqSGincxjeeajuVdA/XN.oTUy556ysT3MkBKDJC61y0Hm",
+    "name": "Mariah Leal"
+  },
+  {
+    "username": "renato",
+    "password": "$2a$10$E8D0Lh6.Zjhnv4Fv2LibleiZlNmjZVZtWnxzwt55wj1j5fx8XUHUm",
+    "name": "Renato Paranhos"
+  },
+  {
+    "username": "wandrey",
+    "password": "$2a$10$81g/xL/dKIqfggV9tTBgeegJ1PI29Ox/6WDyrO3r6tlc25BvSZTTO",
+    "name": "Wandrey Oliveira"
+  }
+]

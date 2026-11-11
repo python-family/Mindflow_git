@@ -1,0 +1,77 @@
+# Workflow: Processamento Pré-Ligação (`pre_call_processing`)
+
+## Objetivo
+Este workflow é responsável por receber uma solicitação de chamada via webhook, buscar o prompt dinâmico associado no banco de dados, tratar os dados e preparar o envio para a Retell AI.
+
+## Definição de Passos (Steps)
+
+| Ordem | Step Name | O Que Faz |
+| :--- | :--- | :--- |
+| 1 | `pre_call_processing_webhook` | Ponto de entrada (main.py). Cria o Registro Mestre, valida e enfileira no Redis via ARQ. |
+| 2 | `pre_call_processing_agendamento_redis` | Verifica a data `quando_ligar`. Decide entre execução imediata ou agendamento persistente via Redis `_defer_until`. |
+| 3 | `pre_call_processing_fetch_prompt` | Consulta a tabela `Prompts` no Supabase utilizando o `prompt_id` recebido (async). |
+| 4 | `pre_call_processing_format_payload` | Limpa o texto do prompt e monta o JSON final seguindo as regras de negócio. |
+| 5 | `pre_call_processing_create_retell_call` | Envia o payload formatado via httpx async para a API da Retell AI para iniciar a chamada. |
+
+## Rastreabilidade (Supabase)
+O fluxo deve registrar o início na tabela `workflow_executions` e cada passo em `workflow_step_executions`.
+
+### Input Esperado (Payload Webhook — `WebhookPayload` em `main.py`)
+
+```json
+{
+  "workflow_name": "pre_call_processing",        // obrigatório (str)
+  "execution_id": "UUID vindo da origem",         // obrigatório (str)
+  "numero": "+5548996027108",                     // obrigatório (str, deve iniciar com '+')
+  "nome": "Ryan",                                 // obrigatório (str)
+  "email": "test@example.com",                    // obrigatório (EmailStr)
+  "agent_id": "agent_1e4cfa23...",                // obrigatório (str) — Override Agent ID da Retell
+  "Prompt_id": "24",                              // obrigatório (str) — ID ou do prompt
+  "quando_ligar": "2026-04-21T15:00:00-03:00",   // opcional (str) — ISO 8601 com timezone
+  "empresa": "MindFlow Agency",                   // opcional (str)
+  "segmento": "Inteligência Artificial",          // opcional (str)
+  "contexto": "Ligação de teste",                 // opcional (str)
+  "from_number": "+555196506656"                  // opcional (str) — Default: iatizeia
+}
+```
+
+## Regras de Negócio
+
+- O prompt deve ser limpo de caracteres especiais de Markdown.
+- Datas devem ser geradas em UTC e convertidas para `America/Sao_Paulo` nos logs.
+- **Rigor de Agendamento**: O campo `quando_ligar` é obrigatório para decidir o tempo de execução. Se não possuir fuso horário (Timezone Offset), o webhook deve rejeitar com erro 400.
+- Se o `prompt_id` não for encontrado, o workflow deve falhar com erro descritivo.
+
+## Resiliência e Concorrência
+
+Para garantir a estabilidade do sistema sob alta carga:
+- **Retry Local (Step 5)**: Implementado loop de retry específico para erro `429 (Rate Limit)` da Retell AI, com backoff exponencial e jitter (máximo 5 tentativas). Isso mantém o job "congelado" aguardando a liberação da API sem reiniciar o workflow.
+- **Controle de Concorrência**: O Worker ARQ está configurado com `max_jobs = 15` para limitar o número de execuções simultâneas e evitar saturação da API externa.
+
+
+## Server and deploy
+
+O servidor está configurado para realizar deploy automático do código na branch main do github.
+
+Link do repositório: https://github.com/Sparkozzy/pre_call_processing.git
+
+Para testar workflow em produção, execute comandos como no exemplo de requisição.
+
+### Exemplo de requisição:
+
+``` python
+url = "https://call-github.bkpxmb.easypanel.host/webhook"
+payload = {
+    "workflow_name": "pre_call_processing",
+    "execution_id": "test-execution-antigravity-python",
+    "numero": "+5548996027108",
+    "nome": "Ryan",
+    "email": "test@example.com",
+    "agent_id": "agent_1e4cfa23e3910c557d82167949",
+    "Prompt_id": "24",
+    "empresa": "MindFlow Agency",
+    "segmento": "Inteligência Artificial",
+    "contexto": "Ligação de teste",
+    "quando_ligar": "2026-04-20T15:00:00-03:00"
+}
+```

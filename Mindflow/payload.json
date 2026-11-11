@@ -1,0 +1,11 @@
+{
+  "workflow_name": "pre_call_processing",
+  "execution_id": "test_call_013",
+  "numero": "+5585998436811",
+  "from_number": null,
+  "nome": "Ueine",
+  "email": "ueine@example.com",
+  "agent_id": "agent_228be054d08159c00806646271",
+  "Prompt_id": "10",
+  "contexto": "Importante: Cuide para que não fique um monólogo no início do atendimento. Faça perguntas, interaja e deixe o cliente falar antes de despejar muita informação. Seja um pouco mais discreto no início."
+}

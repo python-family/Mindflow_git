@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindFlow CS - Timeline Minimalista</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <header class="app-header">
+            <div class="header-titles">
+                <h1>EMPRESA X</h1>
+                <p>Agente SDR</p>
+            </div>
+            <div class="header-actions">
+                <!-- Floating accessible button to add points -->
+                <button id="add-event-btn" class="btn btn-icon primary" aria-label="Adicionar Ponto" title="Adicionar Novo Ponto na Linha do Tempo">
+                    <i class="ri-add-line"></i> Adicionar Ponto
+                </button>
+            </div>
+        </header>
+
+        <main class="main-layout">
+            <!-- Timeline Section on a transparent white background -->
+            <section class="timeline-box">
+                <div class="horizontal-timeline-wrapper">
+                    <div class="horizontal-timeline" id="horizontal-timeline">
+                        <!-- Timeline nodes injected by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Selected Event Details -->
+            <section class="event-details-section" id="event-details-section">
+                <div class="empty-state" id="details-empty">
+                    <i class="ri-mouse-line"></i>
+                    <p>Selecione um ponto na linha para visualizar as informações da etapa</p>
+                </div>
+                <div class="details-content hidden" id="details-content">
+                    <!-- Content injected by JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Form for adding/editing points -->
+    <div id="event-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Novo Ponto</h3>
+                <button class="close-btn" id="close-modal"><i class="ri-close-line"></i></button>
+            </div>
+            <form id="event-form">
+                <input type="hidden" id="event-id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="event-date">Data</label>
+                        <input type="date" id="event-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-category">Categoria / Etapa</label>
+                        <select id="event-category" required>
+                            <option value="Contrato">Contrato</option>
+                            <option value="Pagamento">Pagamento</option>
+                            <option value="Onboarding">Onboarding</option>
+                            <option value="Informação recebida">Informação recebida</option>
+                            <option value="Informação pendente">Informação pendente</option>
+                            <option value="Desenvolvimento">Desenvolvimento</option>
+                            <option value="Entrega">Entrega</option>
+                            <option value="Feedback">Feedback</option>
+                            <option value="Alteração">Alteração</option>
+                            <option value="Reunião">Reunião</option>
+                            <option value="Aprovação">Aprovação</option>
+                            <option value="Problema">Problema</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="event-title">Título Resumido</label>
+                    <input type="text" id="event-title" placeholder="Ex: MVP entregue" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="event-desc">Descrição / O que aconteceu?</label>
+                    <textarea id="event-desc" rows="3" placeholder="Detalhes do evento..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="event-resp">Responsável</label>
+                        <input type="text" id="event-resp" placeholder="Ex: João" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-status">Status</label>
+                        <select id="event-status" required>
+                            <option value="Concluído">Concluído</option>
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Pendente">Pendente</option>
+                            <option value="Bloqueado">Bloqueado</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="event-next">Próximo Passo</label>
+                    <input type="text" id="event-next" placeholder="O que deve ser feito a seguir?">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn secondary" id="cancel-btn">Cancelar</button>
+                    <button type="submit" class="btn primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Injecting JS without filters logically since minimalist -->
+    <script src="app.js"></script>
+</body>
+</html>
